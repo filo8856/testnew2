@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BITS Goa Carpool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            background-color: #1F1F1F;
+            color: #E0E0E0;
+        }
+
+        input::placeholder {
+            color: #BDBDBD;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: #3498DB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980B9;
+        }
+
+        .btn-secondary {
+            background-color: #E74C3C;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #C0392B;
+        }
+
+        .columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .ride-column {
+            flex: 1;
+            background-color: #2C3E50;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .ride-column h3 {
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #E0E0E0;
+            padding-bottom: 10px;
+        }
+
+        .ride-detail {
+            background-color: #34495E;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ride-detail h4 {
+            font-size: 0.8em;
+            color: #E0E0E0;
+        }
+
+        .ride-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #BDC3C7;
+        }
+
+        .back-button {
+            display: block;
+            margin: 30px auto 0;
+            width: 200px;
+            text-align: center;
+            background-color: #E74C3C;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .back-button:hover {
+            background-color: #C0392B;
+        }
+
+        /* Adjusting the search box layout */
+        .search-group {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-group label {
+            font-size: 0.9em;
+            color: #BDC3C7;
+            width: 100px;
+        }
+
+        .search-group input, .search-group select {
+            font-size: 1em;
+            padding: 12px;
+            border-radius: 10px;
+            background-color: #1F1F1F;
+            border: none;
+            color: #E0E0E0;
+            flex: 1;
+        }
+
+        .clear-filter-button {
+            display: block;
+            margin: 20px auto;
+            background-color: #3498DB;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .clear-filter-button:hover {
+            background-color: #2980B9;
+        }
+
+        .small-label {
+            font-size: 0.8em;
+            color: #BDC3C7;
+        }
+
+        .time-range {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-range input {
+            width: 48%;
+        }
+
+        /* Styling for the ride details */
+        .ride-date {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #E74C3C;
+        }
+
+        .ride-info {
+            font-size: 0.85em;
+        }
+
+        .ride-column .ride-detail h4 {
+            font-size: 0.75em;
+        }
+    </style>
+</head>
+<body>
+    <!-- First Page: Registration -->
+    <div class="container" id="start-page">
+        <header>
+            <h1>BITS Goa Carpool</h1>
+        </header>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Enter your name" />
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="Enter your phone number" />
+        </div>
+        <div class="form-group">
+            <label for="from">From</label>
+            <select id="from" onchange="updateToOptions()">
+                <option value="Campus">Campus</option>
+                <option value="Mopa">Mopa</option>
+                <option value="Dabolim">Dabolim</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="to">To</label>
+            <select id="to">
+                <!-- To options will be populated based on "From" selection -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" />
+        </div>
+        <div class="form-group">
+            <label for="time">Time</label>
+            <input type="time" id="time" />
+        </div>
+        <button class="btn-primary" onclick="registerRide()">Register</button>
+        <button class="btn-secondary" onclick="showAvailableRides()">Already Registered</button>
+    </div>
+
+    <!-- Second Page: Browse Rides -->
+    <div class="container" id="browse-rides" style="display: none;">
+        <header>
+            <h1>Available Rides</h1>
+        </header>
+        <!-- Search Box -->
+        <div class="search-group">
+            <label for="search-from" class="small-label">From</label>
+            <select id="search-from" onchange="updateSearchToOptions()">
+                <option value="Campus">Campus</option>
+                <option value="Mopa">Mopa</option>
+                <option value="Dabolim">Dabolim</option>
+            </select>
+        </div>
+        <div class="search-group">
+            <label for="search-to" class="small-label">To</label>
+            <select id="search-to">
+                <option value="Campus">Campus</option>
+                <option value="Mopa">Mopa</option>
+                <option value="Dabolim">Dabolim</option>
+            </select>
+        </div>
+        <div class="search-group">
+            <label for="search-date" class="small-label">Date</label>
+            <input type="date" id="search-date" />
+        </div>
+        <div class="search-group time-range">
+            <label for="search-time-from" class="small-label">Time Range</label>
+            <input type="time" id="search-time-from" />
+            <input type="time" id="search-time-to" />
+        </div>
+        <button class="btn-primary" onclick="searchRides()">Search</button>
+        <button class="clear-filter-button" onclick="clearFilter()">Clear Filter</button>
+
+        <div class="columns">
+            <div class="ride-column" id="from-campus">
+                <h3>From Campus</h3>
+                <div id="from-campus-rides"></div>
+            </div>
+            <div class="ride-column" id="to-campus">
+                <h3>To Campus</h3>
+                <div id="to-campus-rides"></div>
+            </div>
+        </div>
+
+        <button class="back-button" onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        let registeredRides = [];
+
+        // Updates the "To" dropdown based on the "From" selection
+        function updateToOptions() {
+            const fromValue = document.getElementById("from").value;
+            const toSelect = document.getElementById("to");
+            toSelect.innerHTML = "";  
+
+            if (fromValue === "Campus") {
+                toSelect.innerHTML = `<option value="Mopa">Mopa</option>
+                                      <option value="Dabolim">Dabolim</option>`;
+            } else if (fromValue === "Mopa") {
+                toSelect.innerHTML = `<option value="Campus">Campus</option>
+                                      <option value="Dabolim">Dabolim</option>`;
+            } else if (fromValue === "Dabolim") {
+                toSelect.innerHTML = `<option value="Campus">Campus</option>
+                                      <option value="Mopa">Mopa</option>`;
+            }
+        }
+
+        // Updates the "To" dropdown in search filters based on the "From" selection
+        function updateSearchToOptions() {
+            const searchFromValue = document.getElementById("search-from").value;
+            const searchToSelect = document.getElementById("search-to");
+            searchToSelect.innerHTML = "";  
+
+            if (searchFromValue === "Campus") {
+                searchToSelect.innerHTML = `<option value="Mopa">Mopa</option>
+                                            <option value="Dabolim">Dabolim</option>`;
+            } else if (searchFromValue === "Mopa") {
+                searchToSelect.innerHTML = `<option value="Campus">Campus</option>
+                                            <option value="Dabolim">Dabolim</option>`;
+            } else if (searchFromValue === "Dabolim") {
+                searchToSelect.innerHTML = `<option value="Campus">Campus</option>
+                                            <option value="Mopa">Mopa</option>`;
+            }
+        }
+
+        // Format the date in a human-readable format
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const months = [
+                "January", "February", "March", "April", "May", "June", 
+                "July", "August", "September", "October", "November", "December"
+            ];
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day} ${month} ${year}`;
+        }
+
+        // Convert time to 12-hour format
+        function convertTo12HourFormat(timeString) {
+            const [hour, minute] = timeString.split(":");
+            const hourInt = parseInt(hour);
+            const period = hourInt >= 12 ? "PM" : "AM";
+            const newHour = hourInt % 12 || 12;
+            return `${newHour}:${minute} ${period}`;
+        }
+
+        // Register ride
+        function registerRide() {
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+
+            const ride = {
+                name: name,
+                phone: phone,
+                from: from,
+                to: to,
+                date: date,
+                time: time
+            };
+
+            registeredRides.push(ride);
+            showAvailableRides();
+        }
+
+        // Show available rides after registration
+        function showAvailableRides() {
+            document.getElementById("start-page").style.display = "none";
+            document.getElementById("browse-rides").style.display = "block";
+
+            const fromCampusContainer = document.getElementById("from-campus-rides");
+            const toCampusContainer = document.getElementById("to-campus-rides");
+
+            fromCampusContainer.innerHTML = "";
+            toCampusContainer.innerHTML = "";
+
+            registeredRides.forEach(ride => {
+                const rideDiv = document.createElement("div");
+                rideDiv.classList.add("ride-detail");
+
+                rideDiv.innerHTML = `
+                    <span class="ride-date">${formatDate(ride.date)}</span>
+                    <h4>${ride.name} (${ride.phone})</h4>
+                    <div class="ride-info">
+                        <span>${ride.from} → ${ride.to}</span>
+                        <span>${convertTo12HourFormat(ride.time)}</span>
+                    </div>
+                `;
+
+                if (ride.from === "Campus") {
+                    fromCampusContainer.appendChild(rideDiv);
+                } else {
+                    toCampusContainer.appendChild(rideDiv);
+                }
+            });
+        }
+
+        // Go back to the start page
+        function goBack() {
+            document.getElementById("start-page").style.display = "block";
+            document.getElementById("browse-rides").style.display = "none";
+        }
+
+        // Search for rides based on filters
+        function searchRides() {
+            const searchFrom = document.getElementById("search-from").value;
+            const searchTo = document.getElementById("search-to").value;
+            const searchDate = document.getElementById("search-date").value;
+            const searchTimeFrom = document.getElementById("search-time-from").value;
+            const searchTimeTo = document.getElementById("search-time-to").value;
+
+            const fromCampusContainer = document.getElementById("from-campus-rides");
+            const toCampusContainer = document.getElementById("to-campus-rides");
+
+            fromCampusContainer.innerHTML = "";
+            toCampusContainer.innerHTML = "";
+
+            const filteredRides = registeredRides.filter(ride => {
+                let isMatch = true;
+
+                if (searchFrom && ride.from !== searchFrom) isMatch = false;
+                if (searchTo && ride.to !== searchTo) isMatch = false;
+                if (searchDate && ride.date !== searchDate) isMatch = false;
+
+                if (searchTimeFrom && ride.time < searchTimeFrom) isMatch = false;
+                if (searchTimeTo && ride.time > searchTimeTo) isMatch = false;
+
+                return isMatch;
+            });
+
+            filteredRides.forEach(ride => {
+                const rideDiv = document.createElement("div");
+                rideDiv.classList.add("ride-detail");
+
+                rideDiv.innerHTML = `
+                    <span class="ride-date">${formatDate(ride.date)}</span>
+                    <h4>${ride.name} (${ride.phone})</h4>
+                    <div class="ride-info">
+                        <span>${ride.from} → ${ride.to}</span>
+                        <span>${convertTo12HourFormat(ride.time)}</span>
+                    </div>
+                `;
+
+                if (ride.from === "Campus") {
+                    fromCampusContainer.appendChild(rideDiv);
+                } else {
+                    toCampusContainer.appendChild(rideDiv);
+                }
+            });
+        }
+
+        // Clear the search filters and show all rides
+        function clearFilter() {
+            document.getElementById("search-from").value = "Campus";
+            document.getElementById("search-to").value = "Mopa";
+            document.getElementById("search-date").value = "";
+            document.getElementById("search-time-from").value = "";
+            document.getElementById("search-time-to").value = "";
+
+            showAvailableRides();
+        }
+
+        // Populate initial "To" options based on the "From" selection
+        window.onload = function() {
+            updateToOptions();
+        };
+    </script>
+</body>
+</html>
